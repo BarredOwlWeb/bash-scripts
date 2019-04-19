@@ -1,17 +1,30 @@
 #!/bin/bash
 DATE=$(date +%Y%m%d)
-SUNDAY=$(date +%a)
+TODAY=$(date +%a)
 YESTERDAY=$(date --date="1 day ago" +%Y%m%d)
 
-mkdir -p /volume1/Host_backups/Example/server.example.com/backups-$DATE/home
-    rsync -aPH --link-dest=/volume1/Host_backups/Example/server.example.com/backups-$YESTERDAY -e "ssh -i /root/.ssh/id_rsa" --delete backup@server.example.com:/mnt/backups/* /volume1/Host_backups/Example/server.example.com/backups-$DATE
-	    rsync -aPH --link-dest=/volume1/Host_backups/Example/server.example.com/backups-$YESTERDAY/home --rsync-path="sudo rsync" -e "ssh -i /root/.ssh/id_rsa" --exclude "virtfs" --delete backup@server.example.com:/home/ /volume1/Host_backups/Example/server.example.com/backups-$DATE/home/
+if [[ $TODAY == "Sun" ]]; then
+	# Delete anything older than 35 days
+	find -mindepth 1 -maxdepth 1 -type d -mtime +35 -exec rm -rf {} \;
+	mkdir -p /volume1/Host_backups/Example/server.example.com/backups-$DATE-SUN/home
+	rsync -aPH --link-dest=/volume1/Host_backups/Example/server.example.com/backups-$YESTERDAY -e "ssh -i /root/.ssh/id_rsa" --delete backup@server.example.com:/mnt/backups/* /volume1/Host_backups/Example/server.example.com/backups-$DATE-SUN
+  
+	rsync -aPH --link-dest=/volume1/Host_backups/Example/server.example.com/backups-$YESTERDAY/home --rsync-path="sudo rsync" -e "ssh -i /root/.ssh/id_rsa" --exclude "virtfs" --delete backup@server.example.com:/home/ /volume1/Host_backups/Example/server.example.com/backups-$DATE-SUN/home/
 
+	# Delete any other directories that are older than 2 days, that do not contain "SUN" in the dir name
+	find -mindepth 1 -maxdepth 1 -type d -mtime +2 ! \( -name "*SUN*" \) -exec rm -rf {} \;
 
-if [[ $SUNDAY == "Sun" ]]; then
-	find -type d -maxdepth 1 -mtime +29 -exec rm -rf {} \;
+else
+	mkdir -p /volume1/Host_backups/Example/server.example.com/backups-$DATE/home
+
+	if [[ $TODAY == "Mon" ]]; then
+
+	else
+        
+	rsync -aPH --link-dest=/volume1/Host_backups/Example/server.example.com/backups-$YESTERDAY -e "ssh -i /root/.ssh/id_rsa" --delete backup@server.example.com:/mnt/backups/* /volume1/Host_backups/Example/server.example.com/backups-$DATE
+        rsync -aPH --link-dest=/volume1/Host_backups/Example/server.example.com/backups-$YESTERDAY/home --rsync-path="sudo rsync" -e "ssh -i /root/.ssh/id_rsa" --exclude "virtfs" --delete backup@server.example.com:/home/ /volume1/Host_backups/Example/server.example.com/backups-$DATE/home/
+
 fi
 
-
-find -type d -maxdepth 1 -mtime +3 -mtime -7
+find -mindepth 1 -maxdepth 1 -type d -mtime +2 ! \( -name "*SUN*" \) -exec rm -rf {} \;
 chown -R Example.users /volume1/Host_backups/Example/server.example.com/
