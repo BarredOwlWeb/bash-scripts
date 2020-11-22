@@ -2,15 +2,15 @@
 
 #################
 #
-# This script was originally written by David White, founder of Develop CENTS.
+# This script was originally written by David White, founder of Barred Owl Web
 # You may use, modify and distribute this script.
 # 
 # This is a script included in our "Backup Scripts" GitHub repository that we have made publicly available.
 # The repo contains Various scripts to backup MySQL databases & other web server assets.
-# Visit https://github.com/DevelopCENTS/backup-scripts
+# Visit https://github.com/BarredOwlWeb
 #
-# Learn more about Develop CENTS at https://developcents.com.
-# Follow us on Twitter at @developcents
+# Learn more about Barred Owl Web at https://barredowlweb.com.
+# Follow us on Twitter at @BarredOwlWeb
 # 
 # Follow David on Twitter, @davidmwhite
 #
