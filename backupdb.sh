@@ -35,20 +35,20 @@
 DAILY_RETENTION=+0 # how many 24 hour periods to keep locally
 WEEKLY_RETENTION=+1 # home many 24 hour periods to keep in weekly folder
 FOLDER=/mnt/backups/mariadb
+USER="backup"
 PASS="CHANGE-ME"
-DATABASES=$(echo 'show databases;' | mysql -u backup --password='CHANGE-ME' | grep -v ^Database$)
-LIST=$(echo $DATABASES | sed -e "s/\s/\n/g")
+DATABASES=`mysql -e 'show databases;' -u $USER --password=$PASS -sN`
 DATE=$(date +%Y%m%d)
 SUNDAY=$(date +%a)
 
-for i in $LIST; do
+for i in $DATABASES; do
 	# ignore certain DBs
 	if [[ $i == "mysql" || $i == "sys" ]]; then
 		continue
 	fi
 
 	# redirect stderr to stdout, then redirect the regular stdout to the backup file. Order is important
-	OUTPUT=`/bin/nice mysqldump --single-transaction --password=$PASS $i 2>&1 > $FOLDER/daily/$i.$DATE.sql `
+	OUTPUT=`/bin/nice mysqldump --single-transaction -u $USER --password=$PASS $i 2>&1 > $FOLDER/daily/$i.$DATE.sql `
 	if [[ $OUTPUT != "" ]]; then
 		echo Problem with database "$i"
 		echo ====
