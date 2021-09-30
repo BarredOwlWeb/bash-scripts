@@ -60,8 +60,7 @@ if [[ $i != "mysql" ]]; then
 	fi
 fi
 
-find /mnt/backups/mysql/daily/* -name "*.sql" -exec gzip {} \;
-find /mnt/backups/mysql/weekly/* -name "*.sql" -exec gzip {} \;
+find /mnt/backups/mysql/daily/ -name "*.sql" -exec gzip -f {} \;
+find /mnt/backups/mysql/weekly/ -name "*.sql" -exec gzip -f {} \;
 chown -R backup.backup /mnt/backups/mysql
 done
-
