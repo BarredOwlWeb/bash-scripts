@@ -39,7 +39,19 @@ SUNDAY=$(date +%a)
 
 for i in $LIST; do
 if [[ $i != "mysql" ]]; then
-	/bin/nice mysqldump --single-transaction $i > /mnt/backups/mysql/daily/$i.$DATE.sql
+	# Ignore certain databases
+	if [[ $i == "sys" ]]; then
+		continue
+	fi
+
+	# redirect stderr to stdout, then redirect the regular stdout to the backup file. Order is important
+	OUTPUT=`/bin/nice mysqldump --single-transaction $i 2>&1 > /mnt/backups/mysql/daily/$i.$DATE.sql `
+	if [[ $OUTPUT != "" ]]; then
+		echo Problem with database "$i"
+		echo ====
+		echo $OUTPUT
+	fi
+
 	find /mnt/backups/mysql/daily/* -type f -mtime +0 -exec rm -f {} \;
 
 	if [[ $SUNDAY == "Sun" ]]; then
