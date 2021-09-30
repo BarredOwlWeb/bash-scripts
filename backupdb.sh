@@ -42,9 +42,8 @@ DATE=$(date +%Y%m%d)
 SUNDAY=$(date +%a)
 
 for i in $LIST; do
-if [[ $i != "mysql" ]]; then
-	# Ignore certain databases
-	if [[ $i == "sys" ]]; then
+	# ignore certain DBs
+	if [[ $i == "mysql" || $i == "sys" ]]; then
 		continue
 	fi
 
@@ -63,9 +62,8 @@ if [[ $i != "mysql" ]]; then
 		cp $FOLDER/daily/$i.$DATE.sql $FOLDER/weekly/$i.$DATE.sql
 		find $FOLDER/weekly/* -type f -mtime $WEEKLY_RETENTION -exec rm -f {} \;
 	fi
-fi
 
-find $FOLDER/daily/ -name "*.sql" -exec gzip -f {} \;
-find $FOLDER/weekly/ -name "*.sql" -exec gzip -f {} \;
-chown -R backup.backup $FOLDER
+	find $FOLDER/daily/ -name "*.sql" -exec gzip -f {} \;
+	find $FOLDER/weekly/ -name "*.sql" -exec gzip -f {} \;
+	chown -R backup.backup $FOLDER
 done
