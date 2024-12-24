@@ -10,10 +10,6 @@
 # Visit https://github.com/BarredOwlWeb
 #
 # Learn more about Barred Owl Web at https://barredowlweb.com.
-# Follow us on Twitter at @BarredOwlWeb
-# 
-# Follow David on Twitter, @davidmwhite
-#
 #
 # INSTRUCTIONS:
 # 1) Create your backup directory /mnt/backups/mysql/daily and /mnt/backups/mysql/weekly
